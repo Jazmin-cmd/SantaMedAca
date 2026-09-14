@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('profesionales', function (Blueprint $table) {
             $table->id();
-            $table->string('Cristian Chavez, Mauricio Lopez, Oscar Acosta'); 
+            $table->string('nombre');
             $table->foreignId('especialidad_id')->constrained('especialidades');
             $table->string('rango_edad_atencion')->nullable(); // "a partir de 12 años"
             $table->timestamps();

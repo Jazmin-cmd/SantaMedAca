@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('estudios', function (Blueprint $table) {
             $table->id();
-            $table->string('Ecocardiograma Doppler color'); // Ecocardiograma Doppler color
-            $table->string('Ecografias, Laboratorio, Radiologia, Cardiologia')->nullable(); // Ecografías, Laboratorio, Radiología, Cardiología...
+            $table->string('nombre'); // Ecocardiograma Doppler color
+            $table->string('categoria')->nullable(); // Ecografías, Laboratorio, Radiología, Cardiología...
             $table->timestamps();
         });
     }

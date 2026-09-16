@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('especialidades', function (Blueprint $table) {
             $table->id();
-            $table->string('Cardiologia, Ginecologia, Reumatologia'); 
+            $table->string('nombre')->unique();
             $table->timestamps();
         });
     }

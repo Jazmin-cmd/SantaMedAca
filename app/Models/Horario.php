@@ -14,13 +14,6 @@ class Horario extends Model
         'hora_fin',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'hora_inicio' => 'datetime:H:i',
-            'hora_fin' => 'datetime:H:i',
-        ];
-    }
 
     public function profesional(): BelongsTo
     {

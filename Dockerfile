@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     unzip
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Extensión phpredis para sesiones y caché centralizadas en Redis
+RUN pecl install redis && docker-php-ext-enable redis
 
 RUN a2enmod rewrite
 

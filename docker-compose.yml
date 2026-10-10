@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: santamed_app_a
+    restart: unless-stopped
+    env_file: .env
     networks:
       - santamed_net
     depends_on:
@@ -16,6 +18,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: santamed_app_b
+    restart: unless-stopped
+    env_file: .env
     networks:
       - santamed_net
     depends_on:

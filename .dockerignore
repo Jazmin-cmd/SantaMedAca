@@ -1,0 +1,7 @@
+.git
+.env
+vendor
+node_modules
+SantaMedAca-Frontend
+storage/logs/*
+bootstrap/cache/*.php

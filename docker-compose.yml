@@ -1,19 +1,44 @@
 
 services:
-  app:
+  app_a:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: santamed_app
-    ports:
-      - "8080:80"
-    volumes:
-      - ./:/var/www/html
+    container_name: santamed_app_a
+    restart: unless-stopped
+    env_file: .env
     networks:
       - santamed_net
     depends_on:
       - db
       - redis
+
+  app_b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: santamed_app_b
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - santamed_net
+    depends_on:
+      - db
+      - redis
+
+  haproxy:
+    image: haproxy:2.8
+    container_name: santamed_haproxy
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - "8080:80"     # API balanceada
+      - "8404:8404"   # Panel de estadísticas
+    networks:
+      - santamed_net
+    depends_on:
+      - app_a
+      - app_b
 
   db:
     image: mysql:8.0

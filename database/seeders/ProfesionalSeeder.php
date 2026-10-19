@@ -12,18 +12,22 @@ class ProfesionalSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ($this->profesionales() as $datos) {
+        foreach ($this->profesionales() as $indice => $datos) {
             $especialidad = Especialidad::firstOrCreate(['nombre' => $datos['especialidad']]);
             $profesional = Profesional::updateOrCreate(
                 ['nombre' => $datos['nombre']],
                 [
+                    'registro_profesional' => sprintf('RP-%03d', $indice + 1),
                     'especialidad_id' => $especialidad->id,
                     'rango_edad_atencion' => $datos['rango_edad_atencion'],
                 ],
             );
 
             $estudioIds = collect($datos['estudios'])
-                ->map(fn (string $nombre): int => Estudio::firstOrCreate(['nombre' => $nombre])->id)
+                ->map(fn (string $nombre): int => Estudio::firstOrCreate(
+                    ['nombre' => $nombre],
+                    ['categoria' => $datos['especialidad']],
+                )->id)
                 ->all();
 
             $profesional->estudios()->sync($estudioIds);

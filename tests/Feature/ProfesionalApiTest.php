@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\Especialidad;
 use App\Models\Estudio;
 use App\Models\Profesional;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ProfesionalApiTest extends TestCase
@@ -26,6 +28,7 @@ class ProfesionalApiTest extends TestCase
 
         return array_merge([
             'nombre' => 'Dra. Ana Benítez',
+            'registro_profesional' => 'RP-001',
             'especialidad_id' => $this->especialidad->id,
             'rango_edad_atencion' => 'a partir de 12 años',
             'estudios' => [$estudio->id],
@@ -76,6 +79,7 @@ class ProfesionalApiTest extends TestCase
 
         $this->putJson("/api/profesionales/{$id}", [
             'nombre' => 'Dra. Ana Benítez Ruiz',
+            'registro_profesional' => 'RP-001',
             'especialidad_id' => $this->especialidad->id,
             'horarios' => [['dia_semana' => 'martes', 'hora_inicio' => '09:00', 'hora_fin' => '13:00']],
         ])
@@ -112,23 +116,46 @@ class ProfesionalApiTest extends TestCase
     {
         $this->postJson('/api/profesionales', [])
             ->assertUnprocessable()
-            ->assertJsonValidationErrors(['nombre', 'especialidad_id']);
+            ->assertJsonValidationErrors(['nombre', 'registro_profesional', 'especialidad_id']);
     }
 
-    public function test_no_permite_nombre_duplicado(): void
+    public function test_permite_nombres_duplicados_con_registros_profesionales_distintos(): void
+    {
+        $this->postJson('/api/profesionales', $this->datosValidos())->assertCreated();
+
+        $this->postJson('/api/profesionales', $this->datosValidos(['registro_profesional' => 'RP-002']))
+            ->assertCreated();
+    }
+
+    public function test_no_permite_registro_profesional_duplicado(): void
     {
         $this->postJson('/api/profesionales', $this->datosValidos())->assertCreated();
 
         $this->postJson('/api/profesionales', $this->datosValidos())
             ->assertUnprocessable()
-            ->assertJsonValidationErrors(['nombre']);
+            ->assertJsonValidationErrors(['registro_profesional']);
+    }
+
+    public function test_no_permite_asignar_el_mismo_estudio_dos_veces_al_profesional(): void
+    {
+        $datos = $this->datosValidos();
+        $profesionalId = $this->postJson('/api/profesionales', $datos)->json('data.id');
+
+        $this->expectException(QueryException::class);
+
+        DB::table('profesional_estudio')->insert([
+            'profesional_id' => $profesionalId,
+            'estudio_id' => $datos['estudios'][0],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     public function test_especialidad_y_estudios_deben_existir(): void
     {
         $this->postJson('/api/profesionales', $this->datosValidos(['especialidad_id' => 999, 'estudios' => [999]]))
             ->assertUnprocessable()
-            
+
             ->assertJsonValidationErrors(['especialidad_id', 'estudios.0']);
     }
 

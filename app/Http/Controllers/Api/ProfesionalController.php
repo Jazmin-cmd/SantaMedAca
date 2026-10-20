@@ -34,7 +34,7 @@ class ProfesionalController extends Controller
     public function store(ProfesionalRequest $request): JsonResponse
     {
         $profesional = DB::transaction(function () use ($request) {
-            $profesional = Profesional::create($request->safe()->only(['nombre', 'especialidad_id', 'rango_edad_atencion']));
+            $profesional = Profesional::create($request->safe()->only(['nombre', 'registro_profesional', 'especialidad_id', 'rango_edad_atencion']));
             $this->sincronizarRelaciones($profesional, $request);
 
             return $profesional;
@@ -53,7 +53,7 @@ class ProfesionalController extends Controller
     public function update(ProfesionalRequest $request, Profesional $profesional): ProfesionalResource
     {
         DB::transaction(function () use ($request, $profesional) {
-            $profesional->update($request->safe()->only(['nombre', 'especialidad_id', 'rango_edad_atencion']));
+            $profesional->update($request->safe()->only(['nombre', 'registro_profesional', 'especialidad_id', 'rango_edad_atencion']));
             $this->sincronizarRelaciones($profesional, $request);
         });
 

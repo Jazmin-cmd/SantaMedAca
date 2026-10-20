@@ -13,6 +13,7 @@ class Profesional extends Model
 
     protected $fillable = [
         'nombre',
+        'registro_profesional',
         'especialidad_id',
         'rango_edad_atencion',
     ];

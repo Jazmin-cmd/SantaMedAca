@@ -12,6 +12,7 @@ class ProfesionalResource extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->nombre,
+            'registro_profesional' => $this->registro_profesional,
             'rango_edad_atencion' => $this->rango_edad_atencion,
             'especialidad' => $this->whenLoaded('especialidad', fn () => [
                 'id' => $this->especialidad->id,

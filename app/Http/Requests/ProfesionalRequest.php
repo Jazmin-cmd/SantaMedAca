@@ -34,7 +34,10 @@ class ProfesionalRequest extends FormRequest
         return [
             'nombre' => [
                 $requerido, 'string', 'min:3', 'max:255',
-                Rule::unique('profesionales', 'nombre')->ignore($profesional?->id),
+            ],
+            'registro_profesional' => [
+                $requerido, 'string', 'max:100',
+                Rule::unique('profesionales', 'registro_profesional')->ignore($profesional?->id),
             ],
             'especialidad_id' => [$requerido, 'integer', 'exists:especialidades,id'],
             'rango_edad_atencion' => ['nullable', 'string', 'max:100'],
@@ -83,7 +86,7 @@ class ProfesionalRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nombre.unique' => 'Ya existe un profesional con ese nombre.',
+            'registro_profesional.unique' => 'Ya existe un profesional con ese registro profesional.',
             'especialidad_id.exists' => 'La especialidad seleccionada no existe.',
             'estudios.*.exists' => 'Uno de los estudios seleccionados no existe.',
             'estudios.*.distinct' => 'Hay estudios repetidos.',

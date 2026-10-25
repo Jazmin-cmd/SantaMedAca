@@ -28,6 +28,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Casilla que recibe los mensajes del formulario de contacto del sitio
+    'contacto' => [
+        'destino' => env('CONTACTO_DESTINO', 'contacto@santamed.com.py'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
